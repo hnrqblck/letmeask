@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
 
 import { Button } from '../components/Button';
 import { RoomCode } from '../components/RoomCode';
@@ -8,8 +7,6 @@ import { Question } from '../components/Question';
 
 import { useAuth } from '../hooks/useAuth';
 import { useRoom } from '../hooks/useRoom';
-
-import { database } from '../services/firebase';
 
 import logoImg from '../assets/images/logo.svg';
 
@@ -26,31 +23,6 @@ export function AdminRoom() {
     
     const roomId = params.id;
     const { questions, title } = useRoom(roomId);
-
-    async function handleSendQuestion(event: FormEvent) {
-        event.preventDefault();
-
-        if (newQuestion.trim() === '') return;
-
-        if (!user) {
-            toast.error('You must be logged in');
-        }
-
-        const question = {
-            content: newQuestion,
-            author: {
-                name: user?.name,
-                avatar: user?.avatar,
-            },
-            isHighlighted: false,
-            isAnswered: false
-        };
-
-        await database.ref(`rooms/${roomId}/questions`).push(question);
-
-        setNewQuestion('');
-
-    }
 
     return (
         <div id="page-room">
